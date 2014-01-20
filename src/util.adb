@@ -41,7 +41,7 @@ package body Util is
 
   ---------------------------------------------------------------------------
 
-  Draw: GL.Enum := GL.GL_TRIANGLES;
+  Draw: constant GL.Enum := GL.GL_TRIANGLES;
 
   VS: GL.UInt;
   FS: GL.UInt;
@@ -55,7 +55,9 @@ package body Util is
   Move_Cam_Y_Attrib: GL.UInt;
   Move_Cam_Z: Float := 0.0;
   Move_Cam_Z_Attrib: GL.UInt;
-  Movement: constant Float := 0.1;
+  Movement: constant Float := 0.02;
+
+  Keys_Pressed: array (Character) of Boolean := (others => False);
 
   ---------------------------------------------------------------------------
 
@@ -64,6 +66,26 @@ package body Util is
   begin
     TIO.Put_Line (Shader.Get_Info_Log (Prog));
   end Put_Info;
+
+  ---------------------------------------------------------------------------
+
+  procedure Key_Release
+    ( Category  : Lumen.Events.Key_Category;
+      Symbol    : Lumen.Events.Key_Symbol;
+      Modifiers : Lumen.Events.Modifier_Set
+    )
+  is
+  begin
+    case Events.To_Character (Symbol) is
+      when 'a' => Keys_Pressed ('a') := False;
+      when 'd' => Keys_Pressed ('d') := False;
+      when 'w' => Keys_Pressed ('w') := False;
+      when 's' => Keys_Pressed ('s') := False;
+      when 'z' => Keys_Pressed ('z') := False;
+      when 'x' => Keys_Pressed ('x') := False;
+      when others => Null;
+    end case;
+  end Key_Release;
 
   ---------------------------------------------------------------------------
 
@@ -76,33 +98,41 @@ package body Util is
   begin
     case Events.To_Character (Symbol) is
       when ASCII.ESC => Terminated := True;
-      when 'q'  =>
-        case Draw is
-          when GL.GL_POINTS =>
-            Draw := GL.GL_TRIANGLES;
-          when GL.GL_TRIANGLES =>
-            Draw := GL.GL_POINTS;
-          when others => Null;
-        end case;
-      when 'a' =>
-        Move_Cam_X := Move_Cam_X - Movement;
-      when 'd' =>
-        Move_Cam_X := Move_Cam_X + Movement;
-      when 'w' =>
-        Move_Cam_Y := Move_Cam_Y + Movement;
-      when 's' =>
-        Move_Cam_Y := Move_Cam_Y - Movement;
-      when 'z' =>
-        Move_Cam_Z := Move_Cam_Z + Movement;
-      when 'x' =>
-        Move_Cam_Z := Move_Cam_Z - Movement;
+      when 'a' => Keys_Pressed ('a') := True;
+      when 'd' => Keys_Pressed ('d') := True;
+      when 'w' => Keys_Pressed ('w') := True;
+      when 's' => Keys_Pressed ('s') := True;
+      when 'z' => Keys_Pressed ('z') := True;
+      when 'x' => Keys_Pressed ('x') := True;
       when others => Null;
     end case;
   end Key_Press;
 
   procedure Update is
   begin
-    Null;
+    if Keys_Pressed ('a') then
+      Move_Cam_X := Move_Cam_X - Movement;
+    end if;
+
+    if Keys_Pressed ('d') then
+      Move_Cam_X := Move_Cam_X + Movement;
+    end if;
+
+    if Keys_Pressed ('w') then
+      Move_Cam_Y := Move_Cam_Y + Movement;
+    end if;
+
+    if Keys_Pressed ('s') then
+      Move_Cam_Y := Move_Cam_Y - Movement;
+    end if;
+
+    if Keys_Pressed ('z') then
+      Move_Cam_Z := Move_Cam_Z + Movement;
+    end if;
+
+    if Keys_Pressed ('z') then
+      Move_Cam_Z := Move_Cam_Z - Movement;
+    end if;
   end Update;
 
   ---------------------------------------------------------------------------

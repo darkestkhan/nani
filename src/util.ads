@@ -40,6 +40,12 @@ package Util is
 
   Terminated: Boolean := False;
 
+  procedure Key_Release
+    ( Category  : Lumen.Events.Key_Category;
+      Symbol    : Lumen.Events.Key_Symbol;
+      Modifiers : Lumen.Events.Modifier_Set
+    );
+
   procedure Key_Press
     ( Category  : Lumen.Events.Key_Category;
       Symbol    : Lumen.Events.Key_Symbol;

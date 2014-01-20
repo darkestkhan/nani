@@ -37,14 +37,7 @@ use Common;
 with Util;
 procedure Nani is
 
-  S: Integer := 2;
 begin
-  case S is
-  when 3 .. 5 => Null;
-  when 2 => Null;
-  when others =>  Null;
-  end case;
-
   Window.Create
     ( Util.Win,
       Width => Util.Screen_Width,
@@ -53,6 +46,7 @@ begin
     );
 
   Util.Win.Key_Press := Util.Key_Press'Access;
+  Util.Win.Key_Release := Util.Key_Release'Access;
 
   Util.Init;
 --  GL.Blend_Func (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
